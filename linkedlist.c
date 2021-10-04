@@ -18,7 +18,8 @@ void insertStart(Llist* llist, void* entry){
 void* removeStart(Llist* list){
     listNd* dummy = list->head;
     list->head= list->head->next;
-    return dummy->data; /* going to be a void pointer as the data field of the list node struct is a void* */
+    list->size -= 1; /* going to be a void pointer as the data field of the list node struct is a void* */
+    return dummy->data;
 }
 void insertLast(Llist* llist, void* entry){
     listNd* curNode = llist->head;
@@ -74,13 +75,23 @@ void freeLlist(Llist* list, listFunc fptr){
 int main(){
     Llist* llist = createLlist();
     int*entry = (int*)malloc(sizeof(int)*2);
-    entry[0]= 1;
-    entry[1]= 2;
-    entry = (void*)(entry);
+    int*entry1 = (int*)malloc(sizeof(int)*2);
+    int*entry2 = (int*)malloc(sizeof(int)*2);
+    int*entry3 = (int*)malloc(sizeof(int)*2);
+    listNd* node;
+    entry3[0]= 1;
+    entry3[1]= 2; 
+    entry3 = (void*)(entry3);
+    insertStart(llist, entry3);
+    entry[0] = 12;
+    entry[1] = 13;
     insertStart(llist, entry);
-    printLlist(llist, &printNd);
+    entry1 = (int*)llist->head->data;
+    printf("%d %d", entry1[0], entry1[1]);
+    removeStart(llist);
+    entry2 = (int*)llist->head->data;
+    printf("%d %d", entry2[0], entry2[1]);
     return 0;
 }
 */
-
 

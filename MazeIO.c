@@ -82,6 +82,7 @@ Llist* editLinkedList(Llist* movesList, char command, int*player , int*snake, in
     int integer_command = (int)command;
     int* int_command = &integer_command;
     listNd* undoNode;
+    printf("%c \n", command);
     if(command != 'u'){
         int next_snake[2];
         int next[2];/*2 int array to store coordinates of the next move*/
@@ -136,7 +137,8 @@ Llist* editLinkedList(Llist* movesList, char command, int*player , int*snake, in
     }
     return movesList;
 }
-char** editMaze(Llist* movesList, char** maze){
+char** editMaze(Llist* movesList, char** maze, int row, int col){
+ 
     if(movesList->size == 1)
     {  
         return maze;
@@ -148,9 +150,12 @@ char** editMaze(Llist* movesList, char** maze){
     int* Nsnake_coords= array_coords[1];
     int* Oplayer_coords = old_coords[0];
     int* Osnake_coords =old_coords[1];
-    /*maze[Osnake_coords[0]][Osnake_coords[1]] = ' ';*/
+    maze[Osnake_coords[0]][Osnake_coords[1]] = ' ';
     maze[Oplayer_coords[0]][Oplayer_coords[1]] = ' ';
-    printf("%d %d", Oplayer_coords[0], Oplayer_coords[1]);
+    
+    printf(" \n");
+    printf("%c", maze[Oplayer_coords[0]][Oplayer_coords[1]]);
+    printf("\n");
     if(*Ncommand == 97){
         maze[Nplayer_coords[0]][Nplayer_coords[1]] = '<';
     }
@@ -167,8 +172,9 @@ char** editMaze(Llist* movesList, char** maze){
          maze[Nplayer_coords[0]][Nplayer_coords[1]] = 'v';
     }
     else{
-        printf("Unknown command %c", (char)*Ncommand);
+        printf("Unknown command %d", *Ncommand);
     }
+    printmaze(maze,row , col);
     return maze;
 }
 
@@ -198,9 +204,7 @@ int main(int argc, char* argv[]){
             printmaze(maze, row, col);
             scanf(" %c", &command);
             movesList = editLinkedList(movesList, command, player, snake, goal, maze);
-            maze = editMaze(movesList, maze);
-            system("clear");
-            printmaze(maze, row, col);
+            maze = editMaze(movesList, maze, row, col);
             if (player[0] == goal[0] && player[1] == goal[1]){
                 go = 2; /*means you won*/
             }
