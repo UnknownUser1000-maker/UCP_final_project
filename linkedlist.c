@@ -59,17 +59,27 @@ void printLlist(Llist* list, listFunc fptr){
         curNode = curNode->next;
     }
 }
-void freeNd(listNd* node){
-    listNd* firstNode = node;
-    while(node != NULL){
-        node = node->next;
-        free(node);
-    }
-    free(firstNode);
+void freeNd(void* data){
+    free(data);
+    data = NULL;
 }
 void freeLlist(Llist* list, listFunc fptr){
-    (*fptr)(list->head);
+    listNd* curr = list->head;
+    listNd* temp;
+    while(curr){
+        /*point the temp to next to avoid leak*/
+        temp = curr->next;
+        /* clean the data of curr*/
+        (*fptr)(curr->data);
+        curr->data = NULL;
+        curr->next = NULL;
+        free(curr);
+        /*set the current to the temp which its the next node*/
+        curr = temp;
+        
+    }
     free(list);
+    list = NULL;
 }
 /*
 int main(){
