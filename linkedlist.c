@@ -79,7 +79,6 @@ void freeLlist(Llist* list, listFunc fptr){
         
     }
     free(list);
-    list = NULL;
 }
 /*
 int main(){

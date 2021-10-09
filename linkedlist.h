@@ -11,12 +11,12 @@ typedef struct{
 typedef void (*listFunc)(void* data);
 Llist* createLlist(void);
 void insertStart(Llist* llist, void* entry);
-void removeStart(Llist* list);
+void* removeStart(Llist* list);
 void insertLast(Llist* llist, void* entry);
 void* removeLast(Llist* llist);
 void printNd(void* data);
 void printLlist(Llist* list, listFunc fptr);
-void freeNd(listNd* node);
+void freeNd(void* data);
 void freeLlist(Llist* list, listFunc fptr);
 #endif
 
