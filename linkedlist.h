@@ -20,3 +20,4 @@ void freeNd(void* data);
 void freeLlist(Llist* list, listFunc fptr);
 #endif
 
+

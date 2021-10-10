@@ -7,4 +7,6 @@ void printmaze(char** maze, int row, int col){
             printf("%c", maze[i][j]);
         }
         printf("\n");
-    } 
+    }
+}
+

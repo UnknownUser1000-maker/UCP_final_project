@@ -80,6 +80,7 @@ void freeLlist(Llist* list, listFunc fptr){
     }
     free(list);
 }
+
 /*
 int main(){
     Llist* llist = createLlist();

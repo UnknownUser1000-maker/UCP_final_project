@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "editSnake.h"
+
 int* snakeAlgo(int player[2], int snake[2], char** maze){/* simple snake algorithm to follow the player*/
     int rowDiff = player[0] - snake[0]; /*find the difference between the rows of the snake and the player*/
     int colDiff = player[1]- snake[1];  /* find the difference between the columns of the snake and the player*/

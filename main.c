@@ -7,7 +7,9 @@
 #include "fileIO.h"
 #include "printMaze.h"
 #include "editPlayer.h"
+#include "editSnake.h"
 Llist* addMove(Llist* moves, int player[2], int snake[2], char command){/* this funciton adds a new move to the linked list so it can be read by the edit maze function and the maze ca be updated*/
+    void* data;
     int int_command = (int)command; /* ASCII of the command character is stored as the comnand to know which command was put in last*/
     int* array = (int*)malloc(sizeof(int)*5); /* the data stored in the data feild of each listNd is a an int array*/
     array[0]= player[0];/* this data array stores the latest snake, plaer coordinates and the ASCII of the command that updates them*/
@@ -15,12 +17,15 @@ Llist* addMove(Llist* moves, int player[2], int snake[2], char command){/* this 
     array[2] = snake[0];
     array[3] = snake[1];
     array[4]= int_command;
-    void* data = (void*)array;/* type cast to void* as it is a generic linkeList*/
+    data = (void*)array;/* type cast to void* as it is a generic linkeList*/
     insertStart(moves, data);/*every new move is added to the start of the linked list as so the latest moves are on the front of the movesList*/
     return moves;  /* updated linked list returned*/
 }
 char** editMaze(char** maze, Llist* moves, int row, int col, int player[2], int goal[2], int snake[2], char* fileName){
     int i,j;/*varialble for for loop*/
+    listNd* newMove;
+    int* data;
+    int player_x, player_y, snake_x, snake_y, type;
     for( i = 0; i < row; ++i){  /* this for loop iterates over the maze and clears the past symbols of player and snake so the new ones can be read in from the linked list and printed*/
             for( j =0; j < col; ++j){
                 if (maze[i][j]== 'v' || maze[i][j]== '<' || maze[i][j]== '>' || maze[i][j]== '^' ||  maze[i][j]== '~'){
@@ -34,15 +39,13 @@ char** editMaze(char** maze, Llist* moves, int row, int col, int player[2], int 
         return maze;/*the maze is just the original maze read from the input file*/ 
     }
     else{
-        listNd* newMove = moves->head; /*since the maze the pointer points to has been wiped of its snake and player symbols*/
-        listNd* oldmove = newMove->next;
-        int* data = (int*)newMove->data;/* make newNode a pointer to the most recent snake and player data, extract the most recent 2d data array*/
-        int player_x = data[0]; /* find new player coordinates*/
-        int player_y = data[1];
-        int snake_x = data[2];/* find new snake coordinates*/
-        int snake_y = data[3];
-        int type = data[4];/* type is the ascii representation of the command that was inputted which made those coordinates in this data arrat, if we know type we know which icon to use for the play icon*/
-        
+        newMove = moves->head; /*since the maze the pointer points to has been wiped of its snake and player symbols*/
+        data = (int*)newMove->data;/* make newNode a pointer to the most recent snake and player data, extract the most recent 2d data array*/
+        player_x = data[0]; /* find new player coordinates*/
+        player_y = data[1];
+        snake_x = data[2];/* find new snake coordinates*/
+        snake_y = data[3];
+        type = data[4];/* type is the ascii representation of the command that was inputted which made those coordinates in this data arrat, if we know type we know which icon to use for the play icon*/
         maze[snake_x][snake_y] = '~';/* the snake is put on the maze*/
         if(type == 97){ /* this loop puts in an icon on the map according to the command*/
             maze[player_x][player_y] = '<';
@@ -62,6 +65,8 @@ char** editMaze(char** maze, Llist* moves, int row, int col, int player[2], int 
 }
 Llist* undoList(char** maze, Llist* moves, int row, int col, int player[2], int goal[2], int snake[2], char* fileName){
     /* this is a funciton which is called only when the command 'u' is pressed it removes the front most move(listNd) in the movesList(linkedList)*/
+    listNd* newNode;
+    int* data;
     if(moves->size == 1){ /* if the moves list only has one move then the maze is reverted to its initial form from the map.txt file*/
         removeStart(moves);/* removes the front moves so that the linkedList is empty*/
         maze = fileIO(&row, &col, player, goal, snake, fileName);/* gets the initial maze from the fielIO funciton*/
@@ -71,8 +76,8 @@ Llist* undoList(char** maze, Llist* moves, int row, int col, int player[2], int 
     }
     else{/* if there are more than one move in the linked list then we remove the most latest move and we make the player and the snake coordinates equal to the new front of the lsit*/
         removeStart(moves);/* removes the latest move*/
-        listNd* newNode = moves->head;/* the head of the linkedList is now what used to be the second move before the front was removed*/
-        int* data = (int*)newNode->data;/* the data from the new head listNd is exrtracted*/
+        newNode = moves->head;/* the head of the linkedList is now what used to be the second move before the front was removed*/
+        data = (int*)newNode->data;/* the data from the new head listNd is exrtracted*/
         player[0] = data[0]; /*player coordinates are updated with the old data*/
         player[1] = data[1];
         snake[0] = data[2];/*snake coordinates are updated with the old data*/
@@ -86,7 +91,6 @@ int main(int argc, char* argv[]){
     char* fileName; /* fileNAme pointer - FREED*/
     int* player; /* pointer for the player coordinates - FREED*/
     int* snake;/* pointer for the snake coordinates - FREED*/
-    int i; /* iterative variable*/
     int* goal;/* pointer for the goal coordinates - FREED*/
     char command; /* char for storing the input command*/
     int go = 1; /* as long as go == 1 the game will keep going on */

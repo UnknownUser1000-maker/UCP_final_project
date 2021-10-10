@@ -2,31 +2,32 @@
 CC       = gcc
 EXEC     = program
 CFLAGS = -Wall -ansi -pedantic
-OBJ      = maze.o map.o terminal.o makeMaze.o printMap.o
+OBJ      = main.o editSnake.o terminal.o editPlayer.o printMaze.o fileIO.o linkedlist.o
 # Add FANCY to the CFLAGS and recompile the program
-ifdef DARK
-CFLAGS += -D DARK
-DARK : clean $(EXEC)
-endif
 
 $(EXEC) : $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 
-maze.o : maze.c map.h terminal.h
-	$(CC) $(CFLAGS) maze.c -c 
+main.o : main.c editSnake.h terminal.h printMaze.h linkedlist.h editPlayer.h fileIO.h
+	$(CC) $(CFLAGS) main.c -c 
 
-map.o : map.c map.h
-	$(CC) $(CFLAGS) map.c -c
+editPlayer.o : editPlayer.c editPlayer.h
+	$(CC) $(CFLAGS) editPlayer.c -c
+
+editSnake.o : editSnake.c editSnake.h
+	$(CC) $(CFLAGS) editSnake.c -c
 
 terminal.o : terminal.c terminal.h
 	$(CC) $(CFLAGS) terminal.c -c
 
-makeMaze.o : makeMaze.c makeMaze.h
-	$(CC) $(CFLAGS) makeMaze.c -c	
+fileIO.o : fileIO.c fileIO.h
+	$(CC) $(CFLAGS) fileIO.c -c	
 
-printMap.o : printMap.c printMap.h
-	$(CC) $(CFLAGS) printMap.c -c
+printMaze.o : printMaze.c printMaze.h
+	$(CC) $(CFLAGS) printMaze.c -c
 
-	
+linkedlist.o : linkedlist.c linkedlist.h
+	$(CC) $(CFLAGS) linkedlist.c -c
+
 clean:
 	rm -f $(EXEC) $(OBJ)
